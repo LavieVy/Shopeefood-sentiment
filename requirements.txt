@@ -1,4 +1,7 @@
-﻿openpyxl
+scikit-learn
+joblib
+imblearn
+openpyxl
 numpy
 pandas
 seaborn
@@ -11,7 +14,4 @@ gtts
 pyaudio
 speechrecognition
 pyvi
-joblib
-imblearn
-scikit-learn
 re
