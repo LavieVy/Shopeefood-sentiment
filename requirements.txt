@@ -13,3 +13,5 @@ speechrecognition
 pyvi
 joblib
 imblearn
+sklearn
+re
