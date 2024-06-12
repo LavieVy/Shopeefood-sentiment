@@ -452,7 +452,9 @@ elif choice == 'Dự đoán bình luận tiêu cực hay tích cực':
     st.write('''
     Hướng dẫn: Chọn phương thức nhập liệu, nhập liệu và dự đoán
     ''')
-    model = load_model_Sentiment('model/pipeline_model.joblib')
+    from joblib import load
+    # Đọc pipeline từ file
+    model  = load('model/pipeline_model.joblib')
     # menu = ["Nhập bình luận", "Tải tệp Excel", "Tải tệp CSV", "Bình luận bằng giọng nói", "Nói chuyện với chatGPT"]
     # menu = ["Nhập bình luận", "Tải tệp Excel", "Tải tệp CSV"]
     menu = ["Nhập một bình luận", "Nhập nhiều dòng dữ liệu trực tiếp", 
