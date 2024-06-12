@@ -26,6 +26,38 @@ import re
 from underthesea import text_normalize
 from pyvi import ViTokenizer
 
+import pandas as pd
+import numpy as np
+
+from matplotlib import pyplot as plt
+from wordcloud import WordCloud
+from pyvi import ViTokenizer
+
+from sklearn.feature_extraction.text import CountVectorizer, TfidfTransformer, TfidfVectorizer
+
+from sklearn.model_selection import train_test_split, cross_val_score, cross_validate, cross_val_predict, GridSearchCV
+from sklearn.pipeline import Pipeline
+
+import string
+import re
+
+from sklearn.naive_bayes import MultinomialNB
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.linear_model import LogisticRegression
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.neighbors import NearestCentroid
+
+from sklearn.svm import LinearSVC, SVC
+from sklearn import metrics
+
+from sklearn.metrics import classification_report, confusion_matrix, make_scorer, accuracy_score
+from sklearn.metrics import  precision_score, recall_score, f1_score, confusion_matrix, roc_curve, roc_auc_score
+
+from imblearn.pipeline import Pipeline as ImbPipeline
+from imblearn.under_sampling import RandomUnderSampler
+from imblearn.over_sampling import RandomOverSampler
+
+
 #----------------------------------------------------------------------------------------------------
 # Support voice
 import datetime
