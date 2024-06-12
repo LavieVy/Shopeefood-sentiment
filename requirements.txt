@@ -13,5 +13,5 @@ speechrecognition
 pyvi
 joblib
 imblearn
-sklearn
+scikit-learn
 re
