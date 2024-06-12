@@ -6,7 +6,6 @@ import seaborn as sns
 sns.set_style("white")
 
 import streamlit as st
-import speech_recognition as sr
 import pandas as pd
 
 import scipy
@@ -35,10 +34,7 @@ from sklearn.metrics import roc_auc_score, roc_curve
 
 import streamlit as st
 import pickle
-import speech_recognition as sr
-from gtts import gTTS
-import playsound
-import pyaudio
+
 from datetime import date,datetime
 import datetime
 from time import strftime
@@ -119,57 +115,6 @@ def process_special_word(text):
 #------------------------------------------------------------------------------------------------------------------
 
 #------------------------------------------------------------------------------------------------------------------
-def dung():
-    text_to_speech("Hẹn gặp lại bạn sau!")
-#------------------------------------------------------------------------------------------------------------------
-def nhan_text():
-    for i in range(3):
-        st.write('Mời bạn nói: ')
-        text = speech_to_text()
-        if text:
-            return text.lower()
-        elif i < 2:
-            speech_to_text("Tôi không nghe rõ. Bạn nói lại được không!")
-    time.sleep(2)
-    st.write("Hẹn gặp lại bạn sau!")
-    # dung()
-    return 0
-## end voice
-#---------------------------------------------------------------------------------------------
-def speech_to_text():
-    r = sr.Recognizer()
-    with sr.Microphone() as source:
-        # print("Mời bạn nói: ")
-        r.adjust_for_ambient_noise(source)
-        audio = r.listen(source,phrase_time_limit=5)
-    try:
-        text = r.recognize_google(audio,language="vi-VI")
-    except:
-        text="Xin lỗi! tôi không nhận được giọng nói"
-    return str(text)
-#---------------------------------------------------------------------------------------------
-def text_to_speech(text):
-    output = gTTS(text,lang="vi", slow=False)
-    date_string = datetime.datetime.now().strftime("%d%m%Y%H%M%S")
-    filename = "voice"+date_string+".mp3"
-    output.save(filename)
-    playsound.playsound(filename)
-    os.remove(filename)
-#---------------------------------------------------------------------------------------------
-
-#---------------------------------------------------------------------------------------------
-@st.cache_data
-
-def load_model_Sentiment(model):
-    loaded_pipeline = load(model)
-    return loaded_pipeline
-#---------------------------------------------------------------------------------------------
-@st.cache_data
-def load_model_cv():
-    filename = "model/cv_model.pkl"
-    with open(filename, 'rb') as file:
-        cv = pickle.load(file)
-    return cv
 #---------------------------------------------------------------------------------------------
 ## Hàm kiểm tra và tính số lượng, tỷ trọng outliers
 def check_outlier(col):
