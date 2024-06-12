@@ -9,9 +9,4 @@ streamlit
 underthesea
 wordcloud
 import_ipynb
-playsound
-gtts
-pyaudio
-speechrecognition
 pyvi
-re
