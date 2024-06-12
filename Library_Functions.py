@@ -51,63 +51,6 @@ from joblib import load
 
 
 #------------------------------------------------------------------------------------------------------------------
-import re
-from underthesea import text_normalize
-from pyvi import ViTokenizer
-
-def tokenize_vietnamese_text(text):
-    tokens = ViTokenizer.tokenize(text)
-    return tokens
-
-def remove_emoji(text):
-    emoji_pattern = re.compile("["
-                               u"\U0001F600-\U0001F64F"  # Emoticons
-                               u"\U0001F300-\U0001F5FF"  # Symbols & pictographs
-                               u"\U0001F680-\U0001F6FF"  # Transport & map symbols
-                               u"\U0001F1E0-\U0001F1FF"  # Flags (iOS)
-                               u"\U00002500-\U00002BEF"  # Chinese characters
-                               u"\U00002702-\U000027B0"
-                               u"\U00002702-\U000027B0"
-                               u"\U000024C2-\U0001F251"
-                               u"\U0001f926-\U0001f937"
-                               u"\U00010000-\U0010ffff"
-                               u"\u2640-\u2642"
-                               u"\u2600-\u2B55"
-                               u"\u200d"
-                               u"\u23cf"
-                               u"\u23e9"
-                               u"\u231a"
-                               u"\ufe0f"  # dingbats
-                               u"\u3030"
-                               "]+", flags=re.UNICODE)
-    text = emoji_pattern.sub(r'', text)
-    return text
-
-def replace_variations_of_khong(text):
-    variations = ['ko', 'k', 'khong', 'kô', 'hok', 'hông', 'hem', 'k0', 'khg', 'chẳng', 
-                  'chả', 'đéo', 'đếch', 'cóc', 'đách', 'éo', 'đâu có', 'đâu']
-    for variation in variations:
-        text = re.sub(r'\b{}\b'.format(variation), 'không', text)
-    return text
-
-def process_special_word(text):
-    special_words = ['không', "tuy", "tuy là", "dù là"]
-    new_text = ''
-    text_lst = text.split()
-    i = 0
-    while i <= len(text_lst) - 1:
-        word = text_lst[i]
-        if word in special_words:
-            next_idx = i + 1
-            if next_idx <= len(text_lst) - 1:
-                word = word + '_' + text_lst[next_idx]
-            i = next_idx + 1
-        else:
-            i = i + 1
-        new_text = new_text + word + ' '
-    return new_text.strip()
-
-
 
 
 #------------------------------------------------------------------------------------------------------------------
@@ -146,55 +89,6 @@ def remove_outlier(variable, data_param):
     data_param.reset_index(drop=True, inplace=True)
     return data_param
 #---------------------------------------------------------------------------------------------
-def process_text(text, emoji_dict, teen_dict, wrong_lst):
-    document = text.lower()
-    document = document.replace("’", '')
-    document = regex.sub(r'\.+', ".", document)
-    # Remove punctuation
-    document = regex.sub('[^\w\s]', ' ', document)
-    punctuation = '!"#$%&\'()*+,-./:;<=>?@[\\]^_`{|}~'
-    for char in punctuation:
-        document = document.replace(char, ' ')
-
-    # Remove numbers, only keep letters
-    document = regex.sub(r'[\w]*\d+[\w]*', "", document) # document.replace('[\w]*\d+[\w]*', '', regex=True)
-
-    # Some lines start with a space, remove them
-    document = regex.sub('^[\s]{1,}', '', document)
-
-    # # Remove multiple spaces with one space
-    document = regex.sub('[\s]{2,}', ' ', document)
-
-    # Some lines end with a space, remove them
-    document = regex.sub('[\s]{1,}$', '', document)
-
-    # Remove end of line characters
-    document = regex.sub(r'[\r\n]+', ' ', document)
-
-    # Remove HTTP links
-    document = regex.sub(
-        r'((http|https)\:\/\/)?[a-zA-Z0-9\.\/\?\:@\-_=#]+\.([a-zA-Z]){2,6}([a-zA-Z0-9\.\&\/\?\:@\-_=#])*', '',
-        document)
-
-    new_sentence = ''
-    for sentence in sent_tokenize(document):
-        # if not(sentence.isascii()):
-        ###### CONVERT EMOJICON
-        sentence = ''.join(emoji_dict[word] + ' ' if word in emoji_dict else word for word in list(sentence))
-        ###### CONVERT TEENCODE
-        sentence = ' '.join(teen_dict[word] if word in teen_dict else word for word in sentence.split())
-        ###### DEL Punctuation & Numbers
-        pattern = r'(?i)\b[a-záàảãạăắằẳẵặâấầẩẫậéèẻẽẹêếềểễệóòỏõọôốồổỗộơớờởỡợíìỉĩịúùủũụưứừửữựýỳỷỹỵđ]+\b'
-        sentence = ' '.join(regex.findall(pattern, sentence))
-        ###### DEL wrong words
-        sentence = ' '.join('' if word in wrong_lst else word for word in sentence.split())
-        new_sentence = new_sentence + sentence + '. '
-    document = new_sentence
-    # print(document)
-    ###### DEL excess blank space
-    document = regex.sub(r'\s+', ' ', document).strip()
-    # ...
-    return document
 #---------------------------------------------------------------------------------------------
 # Chuẩn hóa unicode tiếng việt
 def loaddicchar():
@@ -217,26 +111,6 @@ def covert_unicode(txt):
         r'à|á|ả|ã|ạ|ầ|ấ|ẩ|ẫ|ậ|ằ|ắ|ẳ|ẵ|ặ|è|é|ẻ|ẽ|ẹ|ề|ế|ể|ễ|ệ|ì|í|ỉ|ĩ|ị|ò|ó|ỏ|õ|ọ|ồ|ố|ổ|ỗ|ộ|ờ|ớ|ở|ỡ|ợ|ù|ú|ủ|ũ|ụ|ừ|ứ|ử|ữ|ự|ỳ|ý|ỷ|ỹ|ỵ|À|Á|Ả|Ã|Ạ|Ầ|Ấ|Ẩ|Ẫ|Ậ|Ằ|Ắ|Ẳ|Ẵ|Ặ|È|É|Ẻ|Ẽ|Ẹ|Ề|Ế|Ể|Ễ|Ệ|Ì|Í|Ỉ|Ĩ|Ị|Ò|Ó|Ỏ|Õ|Ọ|Ồ|Ố|Ổ|Ỗ|Ộ|Ờ|Ớ|Ở|Ỡ|Ợ|Ù|Ú|Ủ|Ũ|Ụ|Ừ|Ứ|Ử|Ữ|Ự|Ỳ|Ý|Ỷ|Ỹ|Ỵ',
         lambda x: dicchar[x.group()], txt)
 #---------------------------------------------------------------------------------------------
-def process_special_word(text):
-    new_text = ''
-    text_lst = text.split()
-    i= 0
-    if 'không' in text_lst:
-        while i <= len(text_lst) - 1:
-            word = text_lst[i]
-            #print(word)
-            #print(i)
-            if  word == 'không':
-                next_idx = i+1
-                if next_idx <= len(text_lst) -1:
-                    word = word +'_'+ text_lst[next_idx]
-                i= next_idx + 1
-            else:
-                i = i+1
-            new_text = new_text + word + ' '
-    else:
-        new_text = text
-    return new_text.strip()
 #---------------------------------------------------------------------------------------------
 def process_postag_thesea(text):
     new_document = ''
@@ -251,11 +125,4 @@ def process_postag_thesea(text):
     new_document = regex.sub(r'\s+', ' ', new_document).strip()
     return new_document
 #---------------------------------------------------------------------------------------------
-def remove_stopword(text, stopwords):
-    ###### REMOVE stop words
-    document = ' '.join('' if word in stopwords else word for word in text.split())
-    #print(document)
-    ###### DEL excess blank space
-    document = regex.sub(r'\s+', ' ', document).strip()
-    return document
 #---------------------------------------------------------------------------------------------
