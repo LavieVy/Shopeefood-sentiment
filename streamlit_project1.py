@@ -795,7 +795,7 @@ elif choice == 'Thông tin nhà hàng':
     df = pd.read_csv('data/data1.csv')
     df2 = pd.read_csv('data/data2.csv')
     cols = ['IDRestaurant', 'Restaurant', 'Address', 'Time', 'Price', 'District','RatingNo', 'avgRating']
-    st.subheader('Data Overview')
+    st.subheader('Thông tin nhà hàng')
     
     st.subheader('Dữ liệu nhà hàng')
     col1, col2 = st.columns(2)
