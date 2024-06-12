@@ -11,3 +11,4 @@ underthesea
 wordcloud
 import_ipynb
 pyvi
+XlsxWriter
