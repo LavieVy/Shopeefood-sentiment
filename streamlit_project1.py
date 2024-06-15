@@ -541,7 +541,7 @@ elif choice == 'Dự đoán bình luận tiêu cực hay tích cực':
     model  = load('model/pipeline_model.joblib')
     # menu = ["Nhập bình luận", "Tải tệp Excel", "Tải tệp CSV", "Bình luận bằng giọng nói", "Nói chuyện với chatGPT"]
     # menu = ["Nhập bình luận", "Tải tệp Excel", "Tải tệp CSV"]
-    menu = ["Nhập một bình luận", "Nhập nhiều dòng dữ liệu trực tiếp", 
+    menu = ["Nhập một bình luận",  
             "Đăng tệp Excel", "Đăng tệp CSV"]
     choice = st.selectbox("Phương thức nhập liệu",menu)
     if choice == "Nhập một bình luận":
@@ -560,79 +560,7 @@ elif choice == 'Dự đoán bình luận tiêu cực hay tích cực':
                     st.write('Tình cảm của bình luận là tiêu cực')
             else:
                 st.write('Nhập vào một bình luận')
-    elif choice == "Nhập nhiều dòng dữ liệu trực tiếp":
-        st.subheader("Nhập nhiều dòng dữ liệu trực tiếp")        
-        
-        num_lines = st.slider('Chọn số dòng để nhập:', min_value=2, max_value=5, value=2)
-        new_df = pd.DataFrame(columns=["Comment"])
-        default_comments = [
-    "Ngon bổ rẻ",
-    "Xấu dở mắc",
-    "Ngon bổ rẻ",
-    "Xấu dở mắc",
-    "Ngon bổ rẻ"
-]
-        for i in range(num_lines):
-            default_value = default_comments[i] if i < len(default_comments) else ""
-            comment = st.text_area(f"Nhập ý kiến {i+1}:", value=default_value)
-            new_df = new_df.append({"Comment": comment}, ignore_index=True)
-        st.dataframe(new_df)     
-        new_df = simple_text_clean(new_df)
-        new_df['words'] = [len(x.split(' ')) for x in new_df['Comment']]
-        new_df['length'] = [len(x) for x in new_df['Comment']]
-        predictions = model.predict(new_df)
-                
-
-        # apppend list result to dataframe
-        new_df['predictions'] = predictions
-        df_after_predict = new_df.copy()
-        # change sentiment to string
-        # Mapping for sentiment
-        sentiment_map = {0: 'Tiêu cực', 1: 'Tích cực'}
-        df_after_predict['Sentiment'] = df_after_predict['predictions'].map(sentiment_map)
-
-                # show table result
-        st.subheader("Result & Statistics :")
-        # get 5 first row
-        st.write("5 bình luận đầu tiên: ")
-        st.table(df_after_predict.head())
-        st.dataframe(filter_dataframe(df_after_predict[['Comment', 'Sentiment']]))
-                # st.table(df_after_predict.iloc[:,[0,1]])
-
-                # show wordcloud
-        st.subheader("Biểu đồ Wordcloud trích xuất đặc trưng theo nhóm sentiment: ")
-        cmt0 = df_after_predict[df_after_predict['Sentiment'] == 'Tiêu cực']
-        cmt1 = df_after_predict[df_after_predict['Sentiment'] == 'Tích cực']
-        cmt0 = cmt0['Comment_new'].str.cat(sep=' ')
-        cmt1 = cmt1['Comment_new'].str.cat(sep=' ')
-        wc0 = WordCloud(background_color='black', max_words=200, stopwords=stopwords_lst, width=1600,
-                                height=800, max_font_size=200)
-        wc0.generate(cmt0)
-        wc1 = WordCloud(background_color='black', max_words=200, stopwords=stopwords_lst, width=1600,
-                                height=800, max_font_size=200)
-        wc1.generate(cmt1)
-        fig, ax = plt.subplots(1, 2, figsize=(20, 10))
-        ax[0].imshow(wc0, interpolation='bilinear')
-        ax[0].axis('off')
-        ax[0].set_title('Tình cảm của bình luận là tiêu cực')
-        ax[1].imshow(wc1, interpolation='bilinear')
-        ax[1].axis('off')
-        ax[1].set_title('Tình cảm của bình luận là tích cực')
-        st.pyplot(fig)
-
-        # show plot bar chart of sentiment
-        st.subheader("Biểu đồ cột thể hiện số lượng bình luận theo nhóm sentiment: ")
-        fig, ax = plt.subplots(figsize=(10, 5))
-        ax = sns.countplot(x='Sentiment', data=df_after_predict)
-        st.pyplot(fig)
-
-                # download file excel
-        st.subheader("Tải tệp csv kết quả dự đoán: ")
-        
-        csv = df_after_predict.to_csv(index=False).encode('utf-8')
     
-        st.download_button('Download',
-                           data=csv, file_name='result_csv.csv', mime='text/csv')
           
     
     elif choice == "Đăng tệp Excel":
