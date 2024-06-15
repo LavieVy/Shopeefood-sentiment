@@ -1,2 +1,2 @@
-This is the Streamlit Link: https://nttv-sentiment-xev9hwju9appqw9xfjoxwuw.streamlit.app/
+This is the Streamlit Link: https://nttv-sentimentanalysis-shopeefood.streamlit.app/
 Thanks :)
