@@ -822,7 +822,7 @@ elif choice == 'Thông tin nhà hàng':
       
     # Thống kê số lượng comment và số lượng "like" theo năm của cửa hàng 953
     default_ID = 953
-    selected_ID = st.number_input('Nhập Restaurant ID', min_value=df2.IDRestaurant.min(), max_value=df2.IDRestaurant.max(), value=default_ID, step=1)
+    selected_ID =st.selectbox('Chọn Restaurant ID', df['IDRestaurant'].unique())
     name = df[df['IDRestaurant']==selected_ID]['Restaurant'].unique()
     st.write('Thông tin nhà hàng')
     st.table(df2[df2['IDRestaurant']==selected_ID][cols])
@@ -867,13 +867,8 @@ elif choice == 'Thông tin nhà hàng':
             plt.legend()
             plt.grid(True)
             plt.tight_layout()
-            st.pyplot(plt)
-            
-        st.write('Những nhận xét tiêu cực')     
-        plot_wordcloud(df[df.Rating_label==0]['Comment_new'], stopwords_lst) 
-        st.write('Những nhận xét tích cực')    
-        plot_wordcloud(df[df.Rating_label==1]['Comment_new'], stopwords_lst)    
-    
+            st.pyplot(plt)          
+      
     else:
         st.write("Nhà hàng không tồn tại hoặc không có dữ liệu cho nhà hàng này.")
         
